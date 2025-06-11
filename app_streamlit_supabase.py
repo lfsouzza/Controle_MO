@@ -64,7 +64,7 @@ with st.form("form_colaborador"):
                 cursor.execute("""
                     INSERT INTO colaboradores (nome, matricula, funcao)
                     VALUES (%s, %s, %s, %s)
-                """, (nome_colab, matricula_colab, frente_colab, funcao_colab))
+                """, (nome_colab, matricula_colab, funcao_colab))
                 conn.commit()
                 st.success("Colaborador cadastrado com sucesso!")
 
