@@ -70,11 +70,11 @@ if menu == "📥 Registro de OM":
 elif menu == "👤 Cadastro de Colaboradores":
     st.subheader("Cadastrar Novo Colaborador")
 
-with st.form("form_colaborador"):
-    funcao_colab = st.text_input("Função")
-    nome_colab = st.text_input("Nome do colaborador")
-    matricula_colab = st.text_input("Matrícula")
-    enviar = st.form_submit_button("Cadastrar colaborador")
+    with st.form("form_colaborador"):
+        funcao_colab = st.text_input("Função")
+        nome_colab = st.text_input("Nome do colaborador")
+        matricula_colab = st.text_input("Matrícula")
+        enviar = st.form_submit_button("Cadastrar colaborador")
 
     if enviar:
         if not nome_colab or not matricula_colab or not funcao_colab:
