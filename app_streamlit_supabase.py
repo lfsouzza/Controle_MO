@@ -4,9 +4,8 @@ import psycopg2
 from datetime import date, timedelta
 
 
-#cd "C:\Users\Felipe\Documents\01. Projetos\01. Programação\Controle_MO"
-#venv\Scripts\activate
-#streamlit run app_streamlit_supabase.py
+
+
 
 # Conexão com Supabase (preencha com suas credenciais)
 conn = psycopg2.connect(
@@ -18,7 +17,7 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-st.title("Registro de Ordem de Manutenção")
+st.title("Relatório Diário de Serviço")
 
 # Formulário
 nome = st.text_input("Nome do colaborador")
