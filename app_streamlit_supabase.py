@@ -49,7 +49,6 @@ st.subheader("Cadastro de Colaboradores")
 with st.form("form_colaborador"):
     nome_colab = st.text_input("Nome do colaborador")
     matricula_colab = st.text_input("Matrícula")
-    frente_colab = st.text_input("Frente")
     funcao_colab = st.text_input("Função")
     enviar = st.form_submit_button("Cadastrar colaborador")
 
@@ -63,7 +62,7 @@ with st.form("form_colaborador"):
                 st.error("Já existe um colaborador com essa matrícula.")
             else:
                 cursor.execute("""
-                    INSERT INTO colaboradores (nome, matricula, frente, funcao)
+                    INSERT INTO colaboradores (nome, matricula, funcao)
                     VALUES (%s, %s, %s, %s)
                 """, (nome_colab, matricula_colab, frente_colab, funcao_colab))
                 conn.commit()
@@ -71,12 +70,12 @@ with st.form("form_colaborador"):
 
 # Exibir colaboradores cadastrados
 st.markdown("### Colaboradores cadastrados")
-cursor.execute("SELECT nome, matricula, frente, funcao FROM colaboradores")
+cursor.execute("SELECT nome, matricula, funcao FROM colaboradores")
 dados = cursor.fetchall()
 
 if dados:
     import pandas as pd
-    df_colab = pd.DataFrame(dados, columns=["Nome", "Matrícula", "Frente", "Função"])
+    df_colab = pd.DataFrame(dados, columns=["Nome", "Matrícula", "Função"])
     st.dataframe(df_colab)
 else:
     st.info("Nenhum colaborador cadastrado.")
