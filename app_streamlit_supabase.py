@@ -83,7 +83,8 @@ with st.form("form_colaborador"):
             if existe:
                 st.error("Já existe um colaborador com essa matrícula.")
             else:
-                cursor.execute("""
+                try:
+                    cursor.execute("""
                     INSERT INTO colaboradores (nome, matricula, funcao)
                     VALUES (%s, %s, %s)
                 """, (nome_colab, matricula_colab, funcao_colab))
