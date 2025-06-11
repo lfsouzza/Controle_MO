@@ -3,10 +3,6 @@ import streamlit as st
 import psycopg2
 from datetime import date, timedelta
 
-
-
-
-
 # Conexão com Supabase (preencha com suas credenciais)
 conn = psycopg2.connect(
     host="aws-0-sa-east-1.pooler.supabase.com",
