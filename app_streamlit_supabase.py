@@ -20,9 +20,9 @@ st.title("Relatório Diário de Serviços")
 # Formulário
 nome = st.text_input("Nome do colaborador")
 matricula = st.text_input("Matrícula")
-frente = st.text_input("Frente")
+frente = st.text_input("Frota")
 om = st.text_input("Número da OM")
-turno = st.selectbox("Turno", ["Manhã", "Tarde", "Noite"])
+turno = st.selectbox("Turno", ["A", "B", "C","D","ADM"])
 descricao = st.text_area("Descrição do serviço (máx 500 caracteres)", max_chars=500)
 data = st.date_input("Data", min_value=date.today() - timedelta(days=1), max_value=date.today(), value=date.today())
 
