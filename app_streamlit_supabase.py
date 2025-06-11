@@ -41,3 +41,42 @@ if st.button("Registrar"):
             st.success("Registro enviado com sucesso!")
         except Exception as e:
             st.error(f"Erro ao salvar: {e}")
+
+st.markdown("---")
+st.subheader("Cadastro de Colaboradores")
+
+# Formulário de cadastro
+with st.form("form_colaborador"):
+    nome_colab = st.text_input("Nome do colaborador")
+    matricula_colab = st.text_input("Matrícula")
+    frente_colab = st.text_input("Frente")
+    funcao_colab = st.text_input("Função")
+    enviar = st.form_submit_button("Cadastrar colaborador")
+
+    if enviar:
+        if not nome_colab or not matricula_colab or not frente_colab or not funcao_colab:
+            st.warning("Todos os campos são obrigatórios.")
+        else:
+            cursor.execute("SELECT * FROM colaboradores WHERE matricula = %s", (matricula_colab,))
+            existe = cursor.fetchone()
+            if existe:
+                st.error("Já existe um colaborador com essa matrícula.")
+            else:
+                cursor.execute("""
+                    INSERT INTO colaboradores (nome, matricula, frente, funcao)
+                    VALUES (%s, %s, %s, %s)
+                """, (nome_colab, matricula_colab, frente_colab, funcao_colab))
+                conn.commit()
+                st.success("Colaborador cadastrado com sucesso!")
+
+# Exibir colaboradores cadastrados
+st.markdown("### Colaboradores cadastrados")
+cursor.execute("SELECT nome, matricula, frente, funcao FROM colaboradores")
+dados = cursor.fetchall()
+
+if dados:
+    import pandas as pd
+    df_colab = pd.DataFrame(dados, columns=["Nome", "Matrícula", "Frente", "Função"])
+    st.dataframe(df_colab)
+else:
+    st.info("Nenhum colaborador cadastrado.")
