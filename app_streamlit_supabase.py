@@ -62,6 +62,8 @@ if menu == "📥 Registro de OM":
                         """, (nome, matricula, frente, om, turno, descricao, data.strftime("%d/%m/%Y")))
                         conn.commit()
                         st.success("✅ Registro enviado com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao salvar no banco: {e}")
 
 # Formulário de cadastro
 
