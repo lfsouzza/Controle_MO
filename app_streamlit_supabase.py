@@ -4,12 +4,14 @@ import psycopg2
 from datetime import date, timedelta
 
 # Conexão com Supabase (preencha com suas credenciais)
+db_config = st.secrets["supabase"]
+
 conn = psycopg2.connect(
-    host="aws-0-sa-east-1.pooler.supabase.com",
-    database="postgres",
-    user="postgres.dvigdrcdmnxpnhflkqzs",
-    password="*10junPEOVl3@",
-    port=6543
+    host=db_config["host"],
+    database=db_config["database"],
+    user=db_config["user"],
+    password=db_config["password"],
+    port=db_config["port"]
 )
 cursor = conn.cursor()
 

@@ -1,0 +1,13 @@
+#cd "C:\Users\Felipe\Documents\01. Projetos\01. Programação\Controle_MO"
+#venv\Scripts\activate
+#streamlit run app_streamlit_supabase.py
+
+
+
+
+git add .
+git commit -m "alteração do cabeçalho"
+git push origin main
+#trazer da nuvem
+git pull origin main --rebase
+git rebase --abort
