@@ -17,7 +17,7 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-st.title("Relatório Diário")
+st.title("Relatório Diário de Serviços")
 
 # Formulário
 nome = st.text_input("Nome do colaborador")
