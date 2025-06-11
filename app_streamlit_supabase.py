@@ -67,7 +67,7 @@ if menu == "📥 Registro de OM":
 
 elif menu == "👤 Cadastro de Colaboradores":
     st.subheader("Cadastrar Novo Colaborador")
-    
+
 with st.form("form_colaborador"):
     funcao_colab = st.text_input("Função")
     nome_colab = st.text_input("Nome do colaborador")
@@ -89,6 +89,8 @@ with st.form("form_colaborador"):
                 """, (nome_colab, matricula_colab, funcao_colab))
                 conn.commit()
                 st.success("Colaborador cadastrado com sucesso!")
+            except Exception as e:
+                st.error(f"Erro ao salvar no banco: {e}")
 
 # Exibir colaboradores cadastrados
 st.markdown("### Colaboradores cadastrados")
