@@ -15,37 +15,59 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-st.title("Relatório Diário de Serviços")
+st.set_page_config(page_title="Controle de Mão de Obra", layout="centered")
+st.title("📋 Controle de Mão de Obra - SOTREQ")
 
-# Formulário
-nome = st.text_input("Nome do colaborador")
-matricula = st.text_input("Matrícula")
-frente = st.text_input("Frota")
-om = st.text_input("Número da OM")
-turno = st.selectbox("Turno", ["A", "B", "C","D","ADM"])
-descricao = st.text_area("Descrição do serviço (máx 500 caracteres)", max_chars=500)
-data = st.date_input("Data", min_value=date.today() - timedelta(days=1), max_value=date.today(), value=date.today())
+menu = st.sidebar.radio("Menu", ["📥 Registro de OM", "👤 Cadastro de Colaboradores"])
 
-if st.button("Registrar"):
-    if not om.isdigit():
-        st.error("OM deve conter apenas números")
-    elif not nome or not matricula or not frente or not descricao:
-        st.error("Todos os campos são obrigatórios")
+# --- REGISTRO DE OM ---
+if menu == "📥 Registro de OM":
+    # Buscar colaboradores
+    cursor.execute("SELECT matricula, nome, funcao FROM colaboradores ORDER BY nome")
+    colaboradores = cursor.fetchall()
+
+    if not colaboradores:
+        st.warning("⚠️ Nenhum colaborador cadastrado. Acesse o menu 'Cadastro de Colaboradores'.")
     else:
-        try:
-            cursor.execute("""
-                INSERT INTO alocacoes (colaborador, matricula, frente, om, turno, descricao, data)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (nome, matricula, frente, om, turno, descricao, data))
-            conn.commit()
-            st.success("Registro enviado com sucesso!")
-        except Exception as e:
-            st.error(f"Erro ao salvar: {e}")
+        colab_dict = {mat: (nome, funcao) for mat, nome, funcao in colaboradores}
 
-st.markdown("---")
-st.subheader("Cadastro de Colaboradores")
+        st.subheader("Registrar Ordem de Manutenção")
+
+        with st.form("form_om"):
+            matricula = st.selectbox("Matrícula", options=list(colab_dict.keys()))
+            nome = colab_dict[matricula][0]
+            funcao = colab_dict[matricula][1]
+
+            st.text_input("Nome", value=nome, disabled=True)
+            st.text_input("Função", value=funcao, disabled=True)
+
+            frente = st.text_input("Frente")
+            om = st.text_input("Número da OM")
+            turno = st.selectbox("Turno", ["Manhã", "Tarde", "Noite"])
+            descricao = st.text_area("Descrição do serviço", max_chars=500)
+            data = st.date_input("Data", min_value=date.today() - timedelta(days=1), max_value=date.today(), value=date.today())
+
+            enviar = st.form_submit_button("Registrar")
+
+            if enviar:
+                if not frente or not om or not descricao:
+                    st.error("Preencha todos os campos obrigatórios.")
+                elif not om.isdigit():
+                    st.error("A OM deve conter apenas números.")
+                else:
+                    try:
+                        cursor.execute("""
+                            INSERT INTO alocacoes (colaborador, matricula, frente, om, turno, descricao, data)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """, (nome, matricula, frente, om, turno, descricao, data.strftime("%d/%m/%Y")))
+                        conn.commit()
+                        st.success("✅ Registro enviado com sucesso!")
 
 # Formulário de cadastro
+
+elif menu == "👤 Cadastro de Colaboradores":
+    st.subheader("Cadastrar Novo Colaborador")
+    
 with st.form("form_colaborador"):
     funcao_colab = st.text_input("Função")
     nome_colab = st.text_input("Nome do colaborador")
