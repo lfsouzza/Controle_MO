@@ -47,13 +47,13 @@ st.subheader("Cadastro de Colaboradores")
 
 # Formulário de cadastro
 with st.form("form_colaborador"):
+    funcao_colab = st.text_input("Função")
     nome_colab = st.text_input("Nome do colaborador")
     matricula_colab = st.text_input("Matrícula")
-    funcao_colab = st.text_input("Função")
     enviar = st.form_submit_button("Cadastrar colaborador")
 
     if enviar:
-        if not nome_colab or not matricula_colab or not frente_colab or not funcao_colab:
+        if not nome_colab or not matricula_colab or not funcao_colab:
             st.warning("Todos os campos são obrigatórios.")
         else:
             cursor.execute("SELECT * FROM colaboradores WHERE matricula = %s", (matricula_colab,))
