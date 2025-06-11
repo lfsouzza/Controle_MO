@@ -33,13 +33,16 @@ if menu == "📥 Registro de OM":
 
         st.subheader("Registrar Ordem de Manutenção")
 
-        with st.form("form_om"):
-            matricula = st.selectbox("Matrícula", options=list(colab_dict.keys()))
-            nome = colab_dict[matricula][0]
-            funcao = colab_dict[matricula][1]
 
-            st.text_input("Nome", value=nome, disabled=True)
-            st.text_input("Função", value=funcao, disabled=True)
+        matricula = st.selectbox("Matrícula", options=list(colab_dict.keys()))
+        nome = colab_dict[matricula][0]
+        funcao = colab_dict[matricula][1]
+
+        st.text_input("Nome", value=nome, disabled=True)
+        st.text_input("Função", value=funcao, disabled=True)
+
+        with st.form("form_om"):
+            
 
             frente = st.text_input("Frente")
             om = st.text_input("Número da OM")
@@ -71,38 +74,33 @@ elif menu == "👤 Cadastro de Colaboradores":
     st.subheader("Cadastrar Novo Colaborador")
 
     with st.form("form_colaborador"):
-        funcao_colab = st.text_input("Função")
-        nome_colab = st.text_input("Nome do colaborador")
+        funcao_colab    = st.text_input("Função")
+        nome_colab      = st.text_input("Nome do colaborador")
         matricula_colab = st.text_input("Matrícula")
-        enviar = st.form_submit_button("Cadastrar colaborador")
+        enviar          = st.form_submit_button("Cadastrar colaborador")
 
-    if enviar:
-        if not nome_colab or not matricula_colab or not funcao_colab:
-            st.warning("Todos os campos são obrigatórios.")
-        else:
-            cursor.execute("SELECT * FROM colaboradores WHERE matricula = %s", (matricula_colab,))
-            existe = cursor.fetchone()
-            if existe:
-                st.error("Já existe um colaborador com essa matrícula.")
+        if enviar:
+            if not nome_colab or not matricula_colab or not funcao_colab:
+                st.warning("Todos os campos são obrigatórios.")
             else:
-                try:
-                    cursor.execute("""
-                    INSERT INTO colaboradores (nome, matricula, funcao)
-                    VALUES (%s, %s, %s)
-                """, (nome_colab, matricula_colab, funcao_colab))
-                conn.commit()
-                st.success("Colaborador cadastrado com sucesso!")
-            except Exception as e:
-                st.error(f"Erro ao salvar no banco: {e}")
+                cursor.execute(
+                    "SELECT * FROM colaboradores WHERE matricula = %s",
+                    (matricula_colab,)
+                )
+                existe = cursor.fetchone()
+                if existe:
+                    st.error("Já existe um colaborador com essa matrícula.")
+                else:
+                    try:
+                        cursor.execute(
+                            """
+                            INSERT INTO colaboradores (nome, matricula, funcao)
+                            VALUES (%s, %s, %s)
+                            """,
+                            (nome_colab, matricula_colab, funcao_colab)
+                        )
+                        conn.commit()
+                        st.success("Colaborador cadastrado com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao salvar no banco: {e}")
 
-# Exibir colaboradores cadastrados
-st.markdown("### Colaboradores cadastrados")
-cursor.execute("SELECT nome, matricula, funcao FROM colaboradores")
-dados = cursor.fetchall()
-
-if dados:
-    import pandas as pd
-    df_colab = pd.DataFrame(dados, columns=["Nome", "Matrícula", "Função"])
-    st.dataframe(df_colab)
-else:
-    st.info("Nenhum colaborador cadastrado.")
